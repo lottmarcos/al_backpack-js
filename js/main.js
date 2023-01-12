@@ -9,32 +9,31 @@ items.forEach( (e) => {
 form.addEventListener("submit", (e) => {
    e.preventDefault()
 
-   const name = e.target.elements["nome"].value
-   const quantity = e.target.elements["quantidade"].value
+   const name = e.target.elements["nome"]
+   const quantity = e.target.elements["quantidade"]
 
-   const exists = items.find( (e) => e.name === name)
+   const exists = items.find( (e) => e.name === name.value)
 
    const currentItem = {
-      "name": name,
-      "quantity": quantity
+      "name": name.value,
+      "quantity": quantity.value
    }
 
    if (exists) {
       currentItem.id = exists.id
       updateElement(currentItem)
-      items[exists.id] = currentItem
+      items[items.findIndex(e => e.id === exists.id)] = currentItem
    }
    else {
-      currentItem.id = items.length
+      currentItem.id = items[items.length -1] ? (items[items.length - 1]).id + 1 : 0
       addElement(currentItem)    
       items.push(currentItem)
    }
 
-
    localStorage.setItem("items", JSON.stringify(items))
 
-   name = ""
-   quantity = ""
+   name.value = ""
+   quantity.value = ""
 });
 
 function addElement(item) { 
@@ -48,9 +47,25 @@ function addElement(item) {
 
    newItem.innerHTML += item.name
 
+   newItem.appendChild(deleteElement(item.id))
+
    list.appendChild(newItem)
 };
 
 function updateElement(item) {
    document.querySelector("[data-id='"+item.id+"']").innerHTML = item.quantity
+};
+
+function deleteElement(id) {
+   const deleteButton = document.createElement("button")
+   deleteButton.classList.add("delete-button")
+   deleteButton.innerText = "X"
+
+   deleteButton.addEventListener("click", function() {
+      this.parentNode.remove()
+      items.splice(items.findIndex(e => e.id === id, 1))
+      localStorage.setItem("items", JSON.stringify(items))
+   })
+
+   return deleteButton
 };
