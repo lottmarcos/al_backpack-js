@@ -1,4 +1,4 @@
-# Travel Backpack | Front End project created for javascript practice.
+# Travel Backpack | Front End project created in an [Alura](https://www.alura.com.br/) class.
 
 ## About
 
